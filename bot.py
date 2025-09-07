@@ -37,7 +37,21 @@ def save_ratings():
         json.dump(ratings, f, ensure_ascii=False, indent=4)
 
 STORIES_CHANNEL_ID = 1329119283686670427  # <<<< ID الروم
-episode_counter = 0  # يعد الحلقات تلقائياً
+
+# ====== تحديد الحلقة الأخيرة عند تشغيل البوت ======
+episode_counter = 0
+if ratings:
+    episodes_numbers = []
+    for data in ratings.values():
+        title = data["title"]  # مثال: "الموسم الرابع - الحلقة 2"
+        if "الحلقة" in title:
+            try:
+                number = int(title.split("الحلقة")[1].strip())
+                episodes_numbers.append(number)
+            except:
+                pass
+    if episodes_numbers:
+        episode_counter = max(episodes_numbers)
 
 # ====== الواجهات ======
 class RatingView(discord.ui.View):
